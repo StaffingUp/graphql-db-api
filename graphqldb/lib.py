@@ -47,14 +47,15 @@ def run_query(
     query: str,
     bearer_token: Optional[str] = None,
 ) -> Dict[str, Any]:
-    print("------------------> run query")
+    headers: Dict[str, Any] = {}
+    print("------------------> run query=")
     try:
       print("------------------> cached query")
       return cache[query]
     except Exception:
-        pass
-    print("------------------> no cached")
-    headers: Dict[str, Any] = {}
+      print("------------------> no cached")
+
+    
     if bearer_token:
         headers["Authorization"] = f"Bearer {bearer_token}"
 
@@ -69,11 +70,11 @@ def run_query(
         # https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md#status-codes
         if ex.response.status_code != 400:
             raise
-    resp_data = resp.json
+    resp_data = resp.json()
 
     if "errors" in resp_data:
         raise ValueError(resp_data["errors"])
 
-    cache[query] = resp_data["data"];
+    cache[query] = resp_data["data"]
     print("------------------> done")
     return cache[query]

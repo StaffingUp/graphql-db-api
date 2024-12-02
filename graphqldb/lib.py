@@ -5,8 +5,12 @@ from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Union
 
 import requests
 
+from cachetools import TTLCache
+
 if TYPE_CHECKING:
     from sqlalchemy.engine.url import URL
+    
+cache = TTLCache(maxsize=10, ttl=360)
 
 # -----------------------------------------------------------------------------
 
@@ -42,6 +46,12 @@ def run_query(
     query: str,
     bearer_token: Optional[str] = None,
 ) -> Dict[str, Any]:
+    try
+    {
+      return cache[str]
+    }
+    except Exception:
+        pass
     headers: Dict[str, Any] = {}
     if bearer_token:
         headers["Authorization"] = f"Bearer {bearer_token}"
@@ -62,5 +72,5 @@ def run_query(
 
     if "errors" in resp_data:
         raise ValueError(resp_data["errors"])
-
-    return resp_data["data"]
+    cache[str] = resp_data["data"]
+    return cache[str]

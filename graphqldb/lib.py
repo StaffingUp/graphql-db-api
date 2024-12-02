@@ -50,7 +50,7 @@ def run_query(
     print("------------------> run query")
     try:
       print("------------------> cached query")
-      return cache[str].json()
+      return cache[query].json()
     except Exception:
         pass
     print("------------------> no cached")
@@ -69,7 +69,7 @@ def run_query(
         # https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md#status-codes
         if ex.response.status_code != 400:
             raise
-    cache[str] = resp;
+    cache[query] = resp;
     resp_data = resp.json()
 
     if "errors" in resp_data:

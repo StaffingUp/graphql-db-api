@@ -11,7 +11,7 @@ import json
 if TYPE_CHECKING:
     from sqlalchemy.engine.url import URL
     
-cache = TTLCache(maxsize=10, ttl=360)
+cache = TTLCache(maxsize=100, ttl=60)
 
 # -----------------------------------------------------------------------------
 

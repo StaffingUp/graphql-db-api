@@ -69,7 +69,7 @@ def run_query(
         # https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md#status-codes
         if ex.response.status_code != 400:
             raise
-    cache[str] =resp;
+    cache[str] = resp;
     resp_data = resp.json()
 
     if "errors" in resp_data:

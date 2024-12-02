@@ -46,14 +46,15 @@ def run_query(
     query: str,
     bearer_token: Optional[str] = None,
 ) -> Dict[str, Any]:
-    print "------------------> run query"
+    print("------------------> run query")
     try
     {
-      print "------------------> cached query"
+      print("------------------> cached query")
       return cache[str]
     }
     except Exception:
         pass
+    print("------------------> no cached")
     headers: Dict[str, Any] = {}
     if bearer_token:
         headers["Authorization"] = f"Bearer {bearer_token}"
@@ -75,5 +76,5 @@ def run_query(
     if "errors" in resp_data:
         raise ValueError(resp_data["errors"])
     cache[str] = resp_data["data"]
-    print "------------------> done"
+    print("------------------> done")
     return cache[str]

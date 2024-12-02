@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Union
 import requests
 
 from cachetools import TTLCache
+import json
 
 if TYPE_CHECKING:
     from sqlalchemy.engine.url import URL
@@ -49,7 +50,7 @@ def run_query(
     print("------------------> run query")
     try:
       print("------------------> cached query")
-      return cache[str]
+      return cache[str].json()
     except Exception:
         pass
     print("------------------> no cached")
@@ -68,11 +69,11 @@ def run_query(
         # https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md#status-codes
         if ex.response.status_code != 400:
             raise
-
+    cache[str] =resp;
     resp_data = resp.json()
 
     if "errors" in resp_data:
         raise ValueError(resp_data["errors"])
-    cache[str] = resp_data["data"]
+
     print("------------------> done")
-    return cache[str]
+    return resp_data

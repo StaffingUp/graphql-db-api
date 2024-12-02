@@ -48,10 +48,8 @@ def run_query(
 ) -> Dict[str, Any]:
     print("------------------> run query")
     try
-    {
       print("------------------> cached query")
       return cache[str]
-    }
     except Exception:
         pass
     print("------------------> no cached")

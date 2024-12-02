@@ -46,8 +46,10 @@ def run_query(
     query: str,
     bearer_token: Optional[str] = None,
 ) -> Dict[str, Any]:
+    print "------------------> run query"
     try
     {
+      print "------------------> cached query"
       return cache[str]
     }
     except Exception:
@@ -73,4 +75,5 @@ def run_query(
     if "errors" in resp_data:
         raise ValueError(resp_data["errors"])
     cache[str] = resp_data["data"]
+    print "------------------> done"
     return cache[str]

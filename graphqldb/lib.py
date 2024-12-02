@@ -47,7 +47,7 @@ def run_query(
     bearer_token: Optional[str] = None,
 ) -> Dict[str, Any]:
     print("------------------> run query")
-    try
+    try:
       print("------------------> cached query")
       return cache[str]
     except Exception:

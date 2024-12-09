@@ -64,7 +64,8 @@ def run_query(
     print("------------------> effective_username: {0}".format(effective_username))
     user = security_manager.find_user(username=effective_username)
     print("------------------> user: {0}".format(user))
-    access_token = core.get_oauth2_access_token(core.get_oauth2_config(),core.id,g.user.id, core.db_engine_spec)
+    #access_token = core.get_oauth2_access_token(core.get_oauth2_config(),core.id,g.user.id, core.db_engine_spec)
+    access_token =  security_manager.oauth_tokengetter()[0] 
     print("------------------> access_token: {0}".format(access_token))
                 
     

@@ -8,6 +8,12 @@ import requests
 from cachetools import TTLCache
 import json
 
+from superset.utils.oauth2 import get_oauth2_access_token, OAuth2ClientConfigSchema
+import superset.core 
+from flask import g, request
+from superset.extensions import security_manager
+
+
 if TYPE_CHECKING:
     from sqlalchemy.engine.url import URL
     
@@ -54,7 +60,11 @@ def run_query(
       return cache[query]
     except Exception:
       print("------------------> no cached")
-
+    effective_username = core.get_username();
+    user = security_manager.find_user(username=effective_username)
+    access_token = core.get_oauth2_access_token(core.get_oauth2_config(),core.id,g.user.id, core.db_engine_spec)
+    print("------------------> access_token: {0}".format(access_token))
+                
     
     if bearer_token:
         headers["Authorization"] = f"Bearer {bearer_token}"

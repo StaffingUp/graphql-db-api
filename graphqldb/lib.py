@@ -61,7 +61,9 @@ def run_query(
     except Exception:
       print("------------------> no cached")
     effective_username = core.get_username();
+    print("------------------> effective_username: {0}".format(effective_username))
     user = security_manager.find_user(username=effective_username)
+    print("------------------> user: {0}".format(user))
     access_token = core.get_oauth2_access_token(core.get_oauth2_config(),core.id,g.user.id, core.db_engine_spec)
     print("------------------> access_token: {0}".format(access_token))
                 

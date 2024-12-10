@@ -11,7 +11,7 @@ import json
 from superset.utils.oauth2 import get_oauth2_access_token, OAuth2ClientConfigSchema
 from flask import Flask, render_template_string, request, session, redirect, url_for,g, request
 from superset.extensions import security_manager,appbuilder
-
+from superset.utils.core import DatasourceName, get_username
 
 if TYPE_CHECKING:
     from sqlalchemy.engine.url import URL
@@ -56,37 +56,16 @@ def run_query(
     print("------------------> run query=")
     try:
       print("------------------> cached query")
-      return cache[query]
+      return security_manager.cache[query]
     except Exception:
       print("------------------> no cached")
-    #effective_username = core.get_username();
-    #print("------------------> effective_username: {0}".format(effective_username))
-    #user = security_manager.find_user(username=effective_username)
-    #print("------------------> user: {0}".format(user))
-    #access_token = core.get_oauth2_access_token(core.get_oauth2_config(),core.id,g.user.id, core.db_engine_spec)
-    #access_token =  security_manager.oauth_tokengetter()[0] 
-    session1 = appbuilder.get_session()
-    print("------------------> security_man: {0}".format(security_manager))
-    print("------------------> security_man: {0}".format(security_manager.appbuilder))
-    print("------------------> security_man: {0}".format(security_manager.appbuilder.sm))
-    print("------------------> security_man: {0}".format(security_manager.appbuilder.sm.oauth_remotes))
-
-    print("------------------> access_token: {0}".format(session1))
-    print("------------------> access_token: {0}".format(session1.identity_map.values()))
-    print("------------------> access_token: {0}".format(session))
-
-    locale =  session.get('locale')
-    print("------------------> locale: {0}".format(locale))
-
-    access_token =  session.get('access_token')
-    print("------------------> access_token: {0}".format(access_token))
-
-    access_token =  security_manager.oauth_tokengetter()
-    print("------------------> access_token: {0}".format(access_token))
-                
-    
-    if bearer_token:
-        headers["Authorization"] = f"Bearer {bearer_token}"
+    effective_username = get_username()
+    print("------------------> query effective_username= {0}".format(effective_username))
+    access_token = security_manager.cache[effective_username]
+    print("------------------> access_token88: {0}".format(access_token))
+        
+    if access_token:
+        headers["Authorization"] = f"Bearer {access_token}"
 
     # TODO(cancan101): figure out timeouts
     resp = requests.post(  # noqa: S113
@@ -105,6 +84,6 @@ def run_query(
     if "errors" in resp_data:
         raise ValueError(resp_data["errors"])
 
-    cache[query] = resp_data["data"]
+    security_manager.cache[query] = resp_data["data"]
     print("------------------> done")
     return cache[query]

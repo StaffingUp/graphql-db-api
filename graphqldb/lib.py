@@ -9,9 +9,8 @@ from cachetools import TTLCache
 import json
 
 from superset.utils.oauth2 import get_oauth2_access_token, OAuth2ClientConfigSchema
-import superset.core 
-from flask import g, request
-from superset.extensions import security_manager
+from flask import Flask, render_template_string, request, session, redirect, url_for,g, request
+from superset.extensions import security_manager,appbuilder
 
 
 if TYPE_CHECKING:
@@ -60,12 +59,29 @@ def run_query(
       return cache[query]
     except Exception:
       print("------------------> no cached")
-    effective_username = core.get_username();
-    print("------------------> effective_username: {0}".format(effective_username))
-    user = security_manager.find_user(username=effective_username)
-    print("------------------> user: {0}".format(user))
+    #effective_username = core.get_username();
+    #print("------------------> effective_username: {0}".format(effective_username))
+    #user = security_manager.find_user(username=effective_username)
+    #print("------------------> user: {0}".format(user))
     #access_token = core.get_oauth2_access_token(core.get_oauth2_config(),core.id,g.user.id, core.db_engine_spec)
-    access_token =  security_manager.oauth_tokengetter()[0] 
+    #access_token =  security_manager.oauth_tokengetter()[0] 
+    session1 = appbuilder.get_session()
+    print("------------------> security_man: {0}".format(security_manager))
+    print("------------------> security_man: {0}".format(security_manager.appbuilder))
+    print("------------------> security_man: {0}".format(security_manager.appbuilder.sm))
+    print("------------------> security_man: {0}".format(security_manager.appbuilder.sm.oauth_remotes))
+
+    print("------------------> access_token: {0}".format(session1))
+    print("------------------> access_token: {0}".format(session1.identity_map.values()))
+    print("------------------> access_token: {0}".format(session))
+
+    locale =  session.get('locale')
+    print("------------------> locale: {0}".format(locale))
+
+    access_token =  session.get('access_token')
+    print("------------------> access_token: {0}".format(access_token))
+
+    access_token =  security_manager.oauth_tokengetter()
     print("------------------> access_token: {0}".format(access_token))
                 
     
@@ -75,6 +91,7 @@ def run_query(
     # TODO(cancan101): figure out timeouts
     resp = requests.post(  # noqa: S113
         graphql_api, json={"query": query}, headers=headers
+
     )
     try:
         resp.raise_for_status()

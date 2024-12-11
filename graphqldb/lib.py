@@ -51,16 +51,12 @@ def run_query(
     bearer_token: Optional[str] = None,
 ) -> Dict[str, Any]:
     headers: Dict[str, Any] = {}
-    print("------------------> run query=")
     try:
-      print("------------------> cached query")
       return security_manager.cache[query]
     except Exception:
-      print("------------------> no cached")
+      pass
     effective_username = get_username()
-    print("------------------> query effective_username= {0}".format(effective_username))
     access_token = security_manager.cache[effective_username]['oauth'][0]
-    print("------------------> access_token88: {0}".format(access_token))
     headers["Authorization"] = f"Bearer {access_token}"
 
     # TODO(cancan101): figure out timeouts
@@ -81,5 +77,4 @@ def run_query(
         raise ValueError(resp_data["errors"])
 
     security_manager.cache[query] = resp_data["data"]
-    print("------------------> done data= {0}".format(resp_data))
     return security_manager.cache[query]

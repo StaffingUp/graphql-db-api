@@ -8,7 +8,6 @@ import requests
 from cachetools import TTLCache
 import json
 
-from superset.utils.oauth2 import get_oauth2_access_token, OAuth2ClientConfigSchema
 from flask import Flask, render_template_string, request, session, redirect, url_for,g, request
 from superset.extensions import security_manager,appbuilder
 from superset.utils.core import DatasourceName, get_username

@@ -14,8 +14,7 @@ from superset.utils.core import DatasourceName, get_username
 
 if TYPE_CHECKING:
     from sqlalchemy.engine.url import URL
-    
-cache = TTLCache(maxsize=100, ttl=60)
+
 
 # -----------------------------------------------------------------------------
 
@@ -84,5 +83,5 @@ def run_query(
         raise ValueError(resp_data["errors"])
 
     security_manager.cache[query] = resp_data["data"]
-    print("------------------> done data= {0}".format(effective_username))
-    return cache[query]
+    print("------------------> done data= {0}".format(resp_data))
+    return security_manager.cache[query]

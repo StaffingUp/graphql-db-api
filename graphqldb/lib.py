@@ -84,5 +84,5 @@ def run_query(
         raise ValueError(resp_data["errors"])
 
     security_manager.cache[query] = resp_data["data"]
-    print("------------------> done")
+    print("------------------> done data= {0}".format(effective_username))
     return cache[query]

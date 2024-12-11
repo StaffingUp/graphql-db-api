@@ -59,11 +59,9 @@ def run_query(
       print("------------------> no cached")
     effective_username = get_username()
     print("------------------> query effective_username= {0}".format(effective_username))
-    access_token = security_manager.cache[effective_username]
+    access_token = security_manager.cache[effective_username]['oauth'][0]
     print("------------------> access_token88: {0}".format(access_token))
-        
-    if access_token:
-        headers["Authorization"] = f"Bearer {access_token}"
+    headers["Authorization"] = f"Bearer {access_token}"
 
     # TODO(cancan101): figure out timeouts
     resp = requests.post(  # noqa: S113
